@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { checkDatabaseConnection } from "@/lib/repository";
 
+export const runtime = "edge";
+
 export async function GET() {
   const health = await checkDatabaseConnection();
   const status = health.connected || health.database === "mock" ? 200 : 503;

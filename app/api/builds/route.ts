@@ -7,6 +7,8 @@ import type {
   KeyboardBuild,
 } from "@/types/keyboard";
 
+export const runtime = "edge";
+
 const userId = "demo-user";
 
 function createBuildId() {

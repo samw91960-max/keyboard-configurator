@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { searchMockParts } from "@/lib/mockDb";
 import type { PartType, SearchRequest, SearchResult } from "@/types/keyboard";
 
+export const runtime = "edge";
+
 const supportedTypes: PartType[] = [
   "keyboard_template",
   "keycap",

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAllParts } from "@/lib/repository";
 import type { KeyboardPart, PartType } from "@/types/keyboard";
 
+export const runtime = "edge";
+
 function flattenParts(parts: Awaited<ReturnType<typeof getAllParts>>) {
   return Object.values(parts).flat() as KeyboardPart[];
 }

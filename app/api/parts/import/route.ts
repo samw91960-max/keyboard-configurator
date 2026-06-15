@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { importPart } from "@/lib/repository";
 import type { ExtractedPart } from "@/types/keyboard";
 
+export const runtime = "edge";
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as { extractedPart?: ExtractedPart };
