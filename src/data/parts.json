@@ -1,0 +1,245 @@
+{
+  "keycaps": [
+    {
+      "id": "keycap-cream-ink",
+      "name": "奶油墨字 PBT",
+      "color": "#F4E9D8",
+      "accentColor": "#2F6F73",
+      "material": "PBT",
+      "legendStyle": "复古正刻",
+      "compatibleLayouts": ["60%", "65%", "75%", "TKL", "Alice", "Split"]
+    },
+    {
+      "id": "keycap-carbon-orange",
+      "name": "碳黑橙点 ABS",
+      "color": "#24272E",
+      "accentColor": "#FF8A3D",
+      "material": "ABS",
+      "legendStyle": "GMK 风格双色",
+      "compatibleLayouts": ["60%", "65%", "75%", "TKL"]
+    },
+    {
+      "id": "keycap-clear-rgb",
+      "name": "半透 RGB PC",
+      "color": "#D8F3FF",
+      "accentColor": "#8B5CF6",
+      "material": "PC",
+      "legendStyle": "侧刻透光",
+      "compatibleLayouts": ["60%", "65%", "75%", "Alice", "Split"]
+    }
+  ],
+  "switches": [
+    {
+      "id": "switch-linear-45",
+      "name": "极光线性轴",
+      "kind": "linear",
+      "forceGf": 45,
+      "soundType": "creamy",
+      "audioFile": "/audio/switch-linear-45.wav"
+    },
+    {
+      "id": "switch-tactile-58",
+      "name": "琥珀段落轴",
+      "kind": "tactile",
+      "forceGf": 58,
+      "soundType": "thock",
+      "audioFile": "/audio/switch-tactile-58.wav"
+    },
+    {
+      "id": "switch-clicky-62",
+      "name": "海盐青轴类",
+      "kind": "clicky",
+      "forceGf": 62,
+      "soundType": "clack",
+      "audioFile": "/audio/switch-clicky-62.wav"
+    },
+    {
+      "id": "switch-silent-50",
+      "name": "夜行静音轴",
+      "kind": "linear",
+      "forceGf": 50,
+      "soundType": "silent",
+      "audioFile": "/audio/switch-silent-50.wav"
+    }
+  ],
+  "pcbs": [
+    {
+      "id": "pcb-60-hotswap",
+      "name": "DZ60 热插拔 RGB",
+      "mount": "hot-swap",
+      "rgb": true,
+      "compatibleLayouts": ["60%"]
+    },
+    {
+      "id": "pcb-60-solder",
+      "name": "GH60 焊接 PCB",
+      "mount": "solder",
+      "rgb": false,
+      "compatibleLayouts": ["60%"]
+    },
+    {
+      "id": "pcb-65-rgb",
+      "name": "KBD67 热插拔 RGB",
+      "mount": "hot-swap",
+      "rgb": true,
+      "compatibleLayouts": ["65%"]
+    },
+    {
+      "id": "pcb-65-solder",
+      "name": "65XT 焊接 PCB",
+      "mount": "solder",
+      "rgb": false,
+      "compatibleLayouts": ["65%"]
+    },
+    {
+      "id": "pcb-75-rgb",
+      "name": "75Pro 热插拔 RGB",
+      "mount": "hot-swap",
+      "rgb": true,
+      "compatibleLayouts": ["75%"]
+    },
+    {
+      "id": "pcb-75-solder",
+      "name": "75 Classic 焊接 PCB",
+      "mount": "solder",
+      "rgb": false,
+      "compatibleLayouts": ["75%"]
+    },
+    {
+      "id": "pcb-tkl-hotswap",
+      "name": "TKL Pro 热插拔",
+      "mount": "hot-swap",
+      "rgb": true,
+      "compatibleLayouts": ["TKL"]
+    },
+    {
+      "id": "pcb-alice-hotswap",
+      "name": "Alice Hotswap 南向 RGB",
+      "mount": "hot-swap",
+      "rgb": true,
+      "compatibleLayouts": ["Alice"]
+    },
+    {
+      "id": "pcb-split-hotswap",
+      "name": "Split BLE 热插拔",
+      "mount": "hot-swap",
+      "rgb": false,
+      "compatibleLayouts": ["Split"]
+    }
+  ],
+  "plates": [
+    {
+      "id": "plate-pc-flex",
+      "name": "PC 柔韧定位板",
+      "material": "PC",
+      "compatibleLayouts": ["60%", "65%", "75%", "Alice", "Split"]
+    },
+    {
+      "id": "plate-fr4-balanced",
+      "name": "FR4 均衡定位板",
+      "material": "FR4",
+      "compatibleLayouts": ["60%", "65%", "75%", "TKL", "Alice"]
+    },
+    {
+      "id": "plate-aluminum-crisp",
+      "name": "铝定位板",
+      "material": "aluminum",
+      "compatibleLayouts": ["60%", "65%", "75%", "TKL"]
+    },
+    {
+      "id": "plate-steel-bright",
+      "name": "钢定位板",
+      "material": "steel",
+      "compatibleLayouts": ["60%", "TKL"]
+    },
+    {
+      "id": "plate-carbon-deep",
+      "name": "碳纤维定位板",
+      "material": "carbon-fiber",
+      "compatibleLayouts": ["65%", "75%", "Alice", "Split"]
+    }
+  ],
+  "cases": [
+    {
+      "id": "case-plastic-cloud",
+      "name": "云白塑料壳",
+      "caseType": "plastic",
+      "color": "#E8EDF2",
+      "compatibleLayouts": ["60%", "65%", "TKL", "Split"]
+    },
+    {
+      "id": "case-aluminum-graphite",
+      "name": "石墨灰铝坨坨",
+      "caseType": "aluminum",
+      "color": "#4B5563",
+      "compatibleLayouts": ["60%", "65%", "75%", "TKL", "Alice"]
+    },
+    {
+      "id": "case-acrylic-ice",
+      "name": "冰透亚克力壳",
+      "caseType": "acrylic",
+      "color": "#BFE8FF",
+      "compatibleLayouts": ["60%", "65%", "75%", "Alice", "Split"]
+    }
+  ],
+  "diffusers": [
+    {
+      "id": "diffuser-none",
+      "name": "无均光板",
+      "enabled": false,
+      "color": "#000000",
+      "compatibleLayouts": ["60%", "65%", "75%", "TKL", "Alice", "Split"]
+    },
+    {
+      "id": "diffuser-ice-blue",
+      "name": "冰蓝均光板",
+      "enabled": true,
+      "color": "#73D8FF",
+      "compatibleLayouts": ["60%", "65%", "75%", "Alice", "Split"]
+    },
+    {
+      "id": "diffuser-violet",
+      "name": "紫罗兰均光板",
+      "enabled": true,
+      "color": "#A78BFA",
+      "compatibleLayouts": ["60%", "65%", "75%"]
+    },
+    {
+      "id": "diffuser-warm",
+      "name": "暖白均光板",
+      "enabled": true,
+      "color": "#FFE6B7",
+      "compatibleLayouts": ["60%", "65%", "75%", "TKL", "Alice"]
+    }
+  ],
+  "soundPacks": [
+    {
+      "id": "sound-thock",
+      "name": "Thock 深沉包",
+      "kind": "thock",
+      "description": "更低频、厚实的敲击感。",
+      "audioFile": "/audio/sound-thock.wav"
+    },
+    {
+      "id": "sound-clack",
+      "name": "Clack 清脆包",
+      "kind": "clack",
+      "description": "偏亮、回弹明显的声线。",
+      "audioFile": "/audio/sound-clack.wav"
+    },
+    {
+      "id": "sound-creamy",
+      "name": "Creamy 顺滑包",
+      "kind": "creamy",
+      "description": "圆润、顺滑、低毛刺感。",
+      "audioFile": "/audio/sound-creamy.wav"
+    },
+    {
+      "id": "sound-silent",
+      "name": "Silent 静音包",
+      "kind": "silent",
+      "description": "更短、更轻，适合夜间输入。",
+      "audioFile": "/audio/sound-silent.wav"
+    }
+  ]
+}
