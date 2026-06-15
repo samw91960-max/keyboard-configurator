@@ -4,13 +4,14 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "客制化键盘制作系统 V2",
-  description: "网络搜索、部件导入、兼容性检测和配置保存原型",
+  description: "键盘配置、部件导入、兼容性检测、3D 预览与网页驱动配置原型",
 };
 
 const navItems = [
   { href: "/search", label: "搜索导入" },
   { href: "/parts", label: "部件库" },
   { href: "/build", label: "配置保存" },
+  { href: "/driver", label: "驱动配置" },
 ];
 
 export default function RootLayout({

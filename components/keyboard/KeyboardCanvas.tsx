@@ -20,6 +20,7 @@ interface KeyboardCanvasProps {
   unit: number;
   gap: number;
   keyColorMap: KeyColorMap;
+  keyLabelMap?: Record<string, string>;
   selectedKeyId?: string;
   materialStyle: KeycapMaterialStyle;
   lightingColor: string;
@@ -206,6 +207,7 @@ export function KeyboardCanvas({
   unit,
   gap,
   keyColorMap,
+  keyLabelMap,
   selectedKeyId,
   materialStyle,
   lightingColor,
@@ -229,7 +231,7 @@ export function KeyboardCanvas({
             h={key.h}
             id={key.id}
             key={key.id}
-            label={key.label}
+            label={keyLabelMap?.[key.id] ?? key.label}
             onPress={onKeyPress}
             selected={selectedKeyId === key.id}
             textColor={textColor}
