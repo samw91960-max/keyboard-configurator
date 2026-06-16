@@ -248,6 +248,16 @@ export default function BuildPage() {
   ]
     .map((id) => findPart(parts, id))
     .filter(Boolean) as KeyboardPart[];
+  const dedupedSelectedParts = selectedParts.filter(
+    (part, index, list) =>
+      list.findIndex((item) => item.type === part.type && item.id === part.id) === index,
+  );
+  const uniqueBuilds = builds.filter(
+    (build, index, list) =>
+      list.findIndex(
+        (item) => item.id === build.id && item.createdAt === build.createdAt,
+      ) === index,
+  );
 
   return (
     <PageShell
@@ -411,8 +421,8 @@ export default function BuildPage() {
                   }
                   value={keycapMaterialStyle}
                 >
-                  {Object.entries(materialStyleLabels).map(([value, label]) => (
-                    <option key={value} value={value}>
+                  {Object.entries(materialStyleLabels).map(([value, label], index) => (
+                    <option key={`material-style-${value}-${index}`} value={value}>
                       {label}
                     </option>
                   ))}
@@ -434,12 +444,12 @@ export default function BuildPage() {
               value={selectedKeyId ? keyColorMap[selectedKeyId] ?? defaultKeycapColor : defaultKeycapColor}
             />
             <div className="mt-3 flex flex-wrap gap-2">
-              {["#ff4d4f", "#111111", "#ffffff", "#73D8FF"].map((color) => (
+              {["#ff4d4f", "#111111", "#ffffff", "#73D8FF"].map((color, index) => (
                 <button
                   aria-label={`设置选中键颜色 ${color}`}
                   className="h-8 w-8 rounded-full border border-black/10 transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={!selectedKeyId}
-                  key={color}
+                  key={`selected-key-color-${index}-${color}`}
                   onClick={() => updateSelectedKeyColor(color)}
                   style={{ backgroundColor: color }}
                   type="button"
@@ -459,10 +469,10 @@ export default function BuildPage() {
           <section className="rounded-md border border-stone-200 bg-white p-4 shadow-sm">
             <h2 className="mb-3 text-base font-semibold text-ink">当前配置</h2>
             <div className="space-y-2">
-              {selectedParts.map((part) => (
+              {dedupedSelectedParts.map((part, index) => (
                 <div
                   className="flex items-center justify-between gap-3 rounded-md bg-stone-50 px-3 py-2 text-sm"
-                  key={part.id}
+                  key={`selected-part-${part.type}-${part.id}-${index}`}
                 >
                   <span className="text-stone-500">{part.type}</span>
                   <span className="font-semibold text-ink">{part.name}</span>
@@ -495,10 +505,10 @@ export default function BuildPage() {
               <p className="text-sm text-stone-500">暂无保存记录。</p>
             ) : (
               <div className="space-y-2">
-                {builds.map((build) => (
+                {uniqueBuilds.map((build, index) => (
                   <div
                     className="rounded-md bg-stone-50 px-3 py-2 text-sm"
-                    key={build.id}
+                    key={`saved-build-${build.id}-${index}`}
                   >
                     <div className="font-semibold text-ink">{build.name}</div>
                     <div className="mt-1 text-xs text-stone-500">

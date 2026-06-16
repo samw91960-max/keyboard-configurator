@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { RefreshCw, Send, Unplug, Usb } from "lucide-react";
 import type { RGBConfig, RGBMode } from "@/types/driver";
 import {
+  dedupeHIDDevices,
   getAuthorizedHIDDevices,
   HIDDeviceSummary,
   isWebHIDSupported,
@@ -53,10 +54,17 @@ export function WebHIDPanel({ rgbConfig, selectedKeyId, onRGBConfigChange }: Web
   const [message, setMessage] = useState("等待连接键盘。");
   const [lastReport, setLastReport] = useState<Uint8Array | null>(null);
 
-  const summaries = useMemo(() => devices.map(summarizeHIDDevice), [devices]);
+  const uniqueDevices = useMemo(() => dedupeHIDDevices(devices), [devices]);
+  const summaries = useMemo(
+    () => uniqueDevices.map((device, index) => summarizeHIDDevice(device, index)),
+    [uniqueDevices],
+  );
   const selectedDevice = useMemo(
-    () => devices.find((device) => summarizeHIDDevice(device).id === selectedDeviceId) ?? devices[0],
-    [devices, selectedDeviceId],
+    () =>
+      uniqueDevices.find(
+        (device, index) => summarizeHIDDevice(device, index).id === selectedDeviceId,
+      ) ?? uniqueDevices[0],
+    [uniqueDevices, selectedDeviceId],
   );
   const connectedSummary = connectedDevice ? summarizeHIDDevice(connectedDevice) : null;
   const canSend = Boolean(connectedDevice);
@@ -67,10 +75,14 @@ export function WebHIDPanel({ rgbConfig, selectedKeyId, onRGBConfigChange }: Web
     setBusy(true);
     try {
       const authorizedDevices = await getAuthorizedHIDDevices();
-      const nextDevices = authorizedDevices.length > 0 ? authorizedDevices : devices;
+      const nextDevices = dedupeHIDDevices(
+        authorizedDevices.length > 0 ? authorizedDevices : devices,
+      );
 
       setDevices(nextDevices);
-      setSelectedDeviceId((current) => current || summarizeHIDDevice(nextDevices[0])?.id || "");
+      setSelectedDeviceId(
+        (current) => current || (nextDevices[0] ? summarizeHIDDevice(nextDevices[0], 0).id : ""),
+      );
       setMessage(
         authorizedDevices.length > 0
           ? `已找到 ${authorizedDevices.length} 个已授权 HID 设备。`
@@ -93,7 +105,7 @@ export function WebHIDPanel({ rgbConfig, selectedKeyId, onRGBConfigChange }: Web
         return;
       }
 
-      const nextDevices = [
+      const nextDevices = dedupeHIDDevices([
         ...devices.filter(
           (existing) =>
             !requestedDevices.some(
@@ -104,13 +116,17 @@ export function WebHIDPanel({ rgbConfig, selectedKeyId, onRGBConfigChange }: Web
             ),
         ),
         ...requestedDevices,
-      ];
+      ]);
       const targetDevice = requestedDevices[0];
-      const summary = summarizeHIDDevice(targetDevice);
+      const targetIndex = nextDevices.findIndex(
+        (device) =>
+          device.vendorId === targetDevice.vendorId && device.productId === targetDevice.productId,
+      );
+      const summary = summarizeHIDDevice(targetDevice, Math.max(targetIndex, 0));
 
       await targetDevice.open();
       setDevices(nextDevices);
-      setSelectedDeviceId(summary.id);
+      setSelectedDeviceId(targetIndex >= 0 ? summary.id : "");
       setConnectedDevice(targetDevice);
       setMessage(`已连接：${describeDevice(summary)}`);
     } catch (error) {
@@ -133,7 +149,7 @@ export function WebHIDPanel({ rgbConfig, selectedKeyId, onRGBConfigChange }: Web
       }
 
       setConnectedDevice(selectedDevice);
-      setMessage(`已连接：${describeDevice(summarizeHIDDevice(selectedDevice))}`);
+      setMessage(`已连接：${describeDevice(summarizeHIDDevice(selectedDevice, 0))}`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "连接已授权设备失败。");
     } finally {
@@ -248,8 +264,8 @@ export function WebHIDPanel({ rgbConfig, selectedKeyId, onRGBConfigChange }: Web
                 onChange={(event) => setSelectedDeviceId(event.target.value)}
                 value={selectedDeviceId || summaries[0]?.id}
               >
-                {summaries.map((device) => (
-                  <option key={device.id} value={device.id}>
+                {summaries.map((device, index) => (
+                  <option key={`hid-device-${device.vendorId}-${device.productId}-${index}`} value={device.id}>
                     {device.keyboardLike ? "键盘" : "HID"} · {describeDevice(device)}
                   </option>
                 ))}
@@ -292,7 +308,7 @@ export function WebHIDPanel({ rgbConfig, selectedKeyId, onRGBConfigChange }: Web
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            {quickModes.map((item) => (
+            {quickModes.map((item, index) => (
               <button
                 className={[
                   "h-9 rounded-md border px-2 text-xs font-semibold transition",
@@ -300,7 +316,7 @@ export function WebHIDPanel({ rgbConfig, selectedKeyId, onRGBConfigChange }: Web
                     ? "border-ink bg-ink text-white"
                     : "border-stone-300 bg-white text-stone-700 hover:border-ink",
                 ].join(" ")}
-                key={item.mode}
+                key={`hid-rgb-mode-${item.mode}-${index}`}
                 onClick={() => setQuickMode(item.mode)}
                 type="button"
               >

@@ -34,6 +34,19 @@ function firstReason(
   return getPartCompatibilityReasons(template, part, partType)[0];
 }
 
+function uniqueById<T extends { id: string }>(items: T[]) {
+  const seen = new Set<string>();
+
+  return items.filter((item) => {
+    if (seen.has(item.id)) {
+      return false;
+    }
+
+    seen.add(item.id);
+    return true;
+  });
+}
+
 export function ComponentPanel({
   catalog,
   selection,
@@ -54,6 +67,13 @@ export function ComponentPanel({
   const defaultKeyColor = selectedKeyUsesAccent ? selectedKeycap.accentColor : selectedKeycap.color;
   const activeKeyColor = selectedKeyCustomization.keycapColor ?? defaultKeyColor;
   const activeSwitchId = selectedKeyCustomization.switchId ?? selection.switchId;
+  const keycaps = uniqueById(catalog.keycaps);
+  const switches = uniqueById(catalog.switches);
+  const pcbs = uniqueById(catalog.pcbs);
+  const plates = uniqueById(catalog.plates);
+  const cases = uniqueById(catalog.cases);
+  const diffusers = uniqueById(catalog.diffusers);
+  const soundPacks = uniqueById(catalog.soundPacks);
 
   return (
     <aside className="space-y-4">
@@ -105,11 +125,11 @@ export function ComponentPanel({
                     value={activeKeyColor}
                   />
                   <div className="flex flex-wrap gap-2">
-                    {[selectedKeycap.color, selectedKeycap.accentColor, "#F8FAFC", "#1F2937"].map((color) => (
+                    {[selectedKeycap.color, selectedKeycap.accentColor, "#F8FAFC", "#1F2937"].map((color, index) => (
                       <button
                         aria-label={`设置颜色 ${color}`}
                         className="h-8 w-8 rounded-full border border-black/10 transition hover:scale-105"
-                        key={color}
+                        key={`key-color-swatch-${index}-${color}`}
                         onClick={() =>
                           onKeyCustomizationChange(selectedKey.id, {
                             ...selectedKeyCustomization,
@@ -156,7 +176,7 @@ export function ComponentPanel({
                   >
                     使用默认轴体
                   </button>
-                  {catalog.switches.map((switchOption) => (
+                  {switches.map((switchOption, index) => (
                     <button
                       className={[
                         "w-full rounded-md border px-3 py-2 text-left text-xs transition",
@@ -164,7 +184,7 @@ export function ComponentPanel({
                           ? "border-ink bg-white font-semibold text-ink shadow-sm"
                           : "border-stone-200 bg-white text-stone-600 hover:bg-stone-100",
                       ].join(" ")}
-                      key={switchOption.id}
+                      key={`per-key-switch-${switchOption.id}-${index}`}
                       onClick={() =>
                         onKeyCustomizationChange(selectedKey.id, {
                           ...selectedKeyCustomization,
@@ -184,11 +204,11 @@ export function ComponentPanel({
           <div>
             <h3 className="mb-2 text-sm font-semibold text-ink">键帽</h3>
             <div className="space-y-2">
-              {catalog.keycaps.map((keycap) => (
+              {keycaps.map((keycap, index) => (
                 <PartOptionCard
                   active={selection.keycapId === keycap.id}
                   compatible={isPartCompatible(template, keycap, "keycap")}
-                  key={keycap.id}
+                  key={`keycap-${keycap.id}-${index}`}
                   meta={`${keycap.material} · ${keycap.legendStyle}`}
                   onSelect={() => onChange("keycapId", keycap.id)}
                   reason={firstReason(template, keycap, "keycap")}
@@ -202,11 +222,11 @@ export function ComponentPanel({
           <div>
             <h3 className="mb-2 text-sm font-semibold text-ink">轴体</h3>
             <div className="space-y-2">
-              {catalog.switches.map((switchOption) => (
+              {switches.map((switchOption, index) => (
                 <PartOptionCard
                   active={selection.switchId === switchOption.id}
                   compatible
-                  key={switchOption.id}
+                  key={`switch-${switchOption.id}-${index}`}
                   meta={`${switchOption.kind} · ${switchOption.forceGf} gf · ${switchOption.soundType}`}
                   onSelect={() => onChange("switchId", switchOption.id)}
                   title={switchOption.name}
@@ -218,11 +238,11 @@ export function ComponentPanel({
           <div>
             <h3 className="mb-2 text-sm font-semibold text-ink">PCB</h3>
             <div className="space-y-2">
-              {catalog.pcbs.map((pcb) => (
+              {pcbs.map((pcb, index) => (
                 <PartOptionCard
                   active={selection.pcbId === pcb.id}
                   compatible={isPartCompatible(template, pcb, "pcb")}
-                  key={pcb.id}
+                  key={`pcb-${pcb.id}-${index}`}
                   meta={`${pcb.mount === "hot-swap" ? "热插拔" : "焊接"} · ${
                     pcb.rgb ? "RGB" : "无 RGB"
                   }`}
@@ -237,11 +257,11 @@ export function ComponentPanel({
           <div>
             <h3 className="mb-2 text-sm font-semibold text-ink">定位板</h3>
             <div className="space-y-2">
-              {catalog.plates.map((plate) => (
+              {plates.map((plate, index) => (
                 <PartOptionCard
                   active={selection.plateId === plate.id}
                   compatible={isPartCompatible(template, plate, "plate")}
-                  key={plate.id}
+                  key={`plate-${plate.id}-${index}`}
                   meta={plate.material}
                   onSelect={() => onChange("plateId", plate.id)}
                   reason={firstReason(template, plate, "plate")}
@@ -254,11 +274,11 @@ export function ComponentPanel({
           <div>
             <h3 className="mb-2 text-sm font-semibold text-ink">外壳</h3>
             <div className="space-y-2">
-              {catalog.cases.map((keyboardCase) => (
+              {cases.map((keyboardCase, index) => (
                 <PartOptionCard
                   active={selection.caseId === keyboardCase.id}
                   compatible={isPartCompatible(template, keyboardCase, "case")}
-                  key={keyboardCase.id}
+                  key={`case-${keyboardCase.id}-${index}`}
                   meta={keyboardCase.caseType}
                   onSelect={() => onChange("caseId", keyboardCase.id)}
                   reason={firstReason(template, keyboardCase, "case")}
@@ -272,11 +292,11 @@ export function ComponentPanel({
           <div>
             <h3 className="mb-2 text-sm font-semibold text-ink">均光板</h3>
             <div className="space-y-2">
-              {catalog.diffusers.map((diffuser: DiffuserOption) => (
+              {diffusers.map((diffuser: DiffuserOption, index) => (
                 <PartOptionCard
                   active={selection.diffuserId === diffuser.id}
                   compatible={isPartCompatible(template, diffuser, "diffuser")}
-                  key={diffuser.id}
+                  key={`diffuser-${diffuser.id}-${index}`}
                   meta={diffuser.enabled ? "开启灯光扩散" : "无灯光扩散"}
                   onSelect={() => onChange("diffuserId", diffuser.id)}
                   reason={firstReason(template, diffuser, "diffuser")}
@@ -300,11 +320,11 @@ export function ComponentPanel({
               </button>
             </div>
             <div className="space-y-2">
-              {catalog.soundPacks.map((soundPack) => (
+              {soundPacks.map((soundPack, index) => (
                 <PartOptionCard
                   active={selection.soundPackId === soundPack.id}
                   compatible
-                  key={soundPack.id}
+                  key={`sound-pack-${soundPack.id}-${index}`}
                   meta={`${soundPack.kind} · ${soundPack.description}`}
                   onSelect={() => onChange("soundPackId", soundPack.id)}
                   title={soundPack.name}

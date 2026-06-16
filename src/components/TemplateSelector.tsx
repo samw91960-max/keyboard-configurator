@@ -12,6 +12,10 @@ export function TemplateSelector({
   selectedTemplate,
   onSelect,
 }: TemplateSelectorProps) {
+  const uniqueTemplates = templates.filter(
+    (template, index, list) => list.findIndex((item) => item.id === template.id) === index,
+  );
+
   return (
     <section className="rounded-md border border-stone-200 bg-white p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between gap-3">
@@ -23,7 +27,7 @@ export function TemplateSelector({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {templates.map((template) => {
+        {uniqueTemplates.map((template, index) => {
           const active = template.id === selectedTemplate.id;
           return (
             <button
@@ -33,7 +37,7 @@ export function TemplateSelector({
                   ? "border-ink bg-ink text-white"
                   : "border-stone-200 bg-stone-50 text-ink hover:border-stone-300 hover:bg-white",
               ].join(" ")}
-              key={template.id}
+              key={`template-${template.id}-${index}`}
               onClick={() => onSelect(template)}
               type="button"
             >

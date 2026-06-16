@@ -35,6 +35,7 @@ function sourceUrl(part: KeyboardPart) {
 
 export function PartCard({ part }: PartCardProps) {
   const url = sourceUrl(part);
+  const tags = Array.from(new Set(part.tags));
 
   return (
     <article className="rounded-md border border-stone-200 bg-white p-4 shadow-sm">
@@ -59,10 +60,10 @@ export function PartCard({ part }: PartCardProps) {
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {part.tags.map((tag) => (
+        {tags.map((tag, index) => (
           <span
             className="rounded bg-stone-100 px-2 py-1 text-xs text-stone-600"
-            key={tag}
+            key={`part-tag-${part.type}-${part.id}-${index}`}
           >
             {tag}
           </span>

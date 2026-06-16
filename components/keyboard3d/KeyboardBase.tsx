@@ -107,7 +107,7 @@ export function KeyboardBase({
         const accent = key.label === "Esc" || key.label.includes("Enter") || index % 13 === 0;
 
         return (
-          <group key={key.id}>
+          <group key={`${layout}-${key.id}-${key.x}-${key.y}-${index}`}>
             <Switch3D switchType={switchPart?.switchType} x={x} z={z} />
             <RefinedKeycap
               color={keyColorMap[key.id] ?? (accent ? accentColor : keyColor)}

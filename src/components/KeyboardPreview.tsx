@@ -109,7 +109,7 @@ export function KeyboardPreview({
                     ? "border-white ring-2 ring-ink ring-offset-2 ring-offset-white"
                     : "border-black/15 focus:ring-2 focus:ring-white/80",
                 ].join(" ")}
-                key={key.id}
+                key={`${template.id}-${key.id}-${key.x}-${key.y}-${index}`}
                 onClick={() => onKeyPress(key.id)}
                 style={{
                   left: padding + key.x * unit,

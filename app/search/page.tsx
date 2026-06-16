@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Download, ExternalLink, Search } from "lucide-react";
 import { PageShell } from "@/components/v2/PageShell";
 import { partTypeLabels, partTypes } from "@/lib/labels";
@@ -13,6 +13,20 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [importingKey, setImportingKey] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+  const uniqueResults = useMemo(() => {
+    const seen = new Set<string>();
+
+    return results.filter((result) => {
+      const key = `${result.extractedPart.type}:${result.url}`;
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
+  }, [results]);
 
   async function handleSearch() {
     setLoading(true);
@@ -43,7 +57,7 @@ export default function SearchPage() {
   }
 
   async function handleImport(result: SearchResult) {
-    const key = `${result.title}-${result.url}`;
+    const key = `${result.extractedPart.type}:${result.url}`;
     setImportingKey(key);
     setMessage("");
 
@@ -93,8 +107,8 @@ export default function SearchPage() {
               onChange={(event) => setType(event.target.value as PartType)}
               value={type}
             >
-              {partTypes.map((partType) => (
-                <option key={partType} value={partType}>
+              {partTypes.map((partType, index) => (
+                <option key={`search-type-${partType}-${index}`} value={partType}>
                   {partTypeLabels[partType]}
                 </option>
               ))}
@@ -120,13 +134,13 @@ export default function SearchPage() {
       </section>
 
       <section className="mt-5 grid gap-4 lg:grid-cols-2">
-        {results.map((result) => {
-          const importKey = `${result.title}-${result.url}`;
+        {uniqueResults.map((result, index) => {
+          const importKey = `${result.extractedPart.type}:${result.url}`;
 
           return (
             <article
               className="rounded-md border border-stone-200 bg-white p-4 shadow-sm"
-              key={importKey}
+              key={`search-${result.extractedPart.type}-${index}-${result.url}`}
             >
               <div className="mb-3 flex gap-3">
                 <div className="flex h-20 w-24 shrink-0 items-center justify-center rounded-md bg-stone-100 text-xs font-semibold text-stone-500">

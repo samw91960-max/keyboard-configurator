@@ -266,6 +266,21 @@ export default function DriverPage() {
   const selectedMapping = findMapping(keyMappings, selectedKeyId, activeLayer);
   const selectedDisplayMapping = findMapping(keyMappings, selectedKeyId, displayLayer);
   const activeMacro = macros.find((macro) => macro.id === activeMacroId) ?? macros[0];
+  const uniqueTemplates = useMemo(
+    () =>
+      parts?.keyboard_template.filter(
+        (template, index, list) =>
+          list.findIndex((item) => item.id === template.id) === index,
+      ) ?? [],
+    [parts],
+  );
+  const uniqueMacros = useMemo(
+    () =>
+      macros.filter(
+        (macro, index, list) => list.findIndex((item) => item.id === macro.id) === index,
+      ),
+    [macros],
+  );
 
   const buildSelection = useMemo(() => {
     if (!parts) {
@@ -501,8 +516,8 @@ export default function DriverPage() {
                   onChange={(event) => updateTemplate(event.target.value)}
                   value={templateId}
                 >
-                  {parts.keyboard_template.map((template) => (
-                    <option key={template.id} value={template.id}>
+                  {uniqueTemplates.map((template, index) => (
+                    <option key={`driver-template-${template.id}-${index}`} value={template.id}>
                       {template.name} / {template.layout}
                     </option>
                   ))}
@@ -523,7 +538,7 @@ export default function DriverPage() {
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              {layers.map((layer) => (
+              {layers.map((layer, index) => (
                 <button
                   className={[
                     "rounded-md border px-3 py-2 text-sm font-semibold transition",
@@ -531,7 +546,7 @@ export default function DriverPage() {
                       ? "border-ink bg-ink text-white"
                       : "border-stone-200 bg-white text-stone-700 hover:border-ink",
                   ].join(" ")}
-                  key={layer.id}
+                  key={`driver-layer-${layer.id}-${index}`}
                   onClick={() => {
                     setActiveLayer(layer.id);
                     setFnPreview(false);
@@ -629,13 +644,13 @@ export default function DriverPage() {
                 }
                 value={selectedMapping?.assignedKey ?? ""}
               >
-                {keyOptions.map((option) => (
-                  <option key={option} value={option}>
+                {keyOptions.map((option, index) => (
+                  <option key={`key-option-${option}-${index}`} value={option}>
                     {option}
                   </option>
                 ))}
-                {macros.map((macro) => (
-                  <option key={macro.id} value={`Macro:${macro.id}`}>
+                {uniqueMacros.map((macro, index) => (
+                  <option key={`mapping-macro-${macro.id}-${index}`} value={`Macro:${macro.id}`}>
                     Macro: {macro.name}
                   </option>
                 ))}
@@ -659,8 +674,8 @@ export default function DriverPage() {
                 onChange={(event) => updateFnKey(event.target.value)}
                 value={fnKeyId}
               >
-                {keyList(layout).map((key) => (
-                  <option key={key.id} value={key.id}>
+                {keyList(layout).map((key, index) => (
+                  <option key={`fn-key-${layout}-${key.id}-${key.x}-${key.y}-${index}`} value={key.id}>
                     {key.label} ({key.id})
                   </option>
                 ))}
@@ -700,8 +715,8 @@ export default function DriverPage() {
                   }
                   value={rgbConfig.mode}
                 >
-                  {rgbModes.map((mode) => (
-                    <option key={mode.value} value={mode.value}>
+                  {rgbModes.map((mode, index) => (
+                    <option key={`rgb-mode-${mode.value}-${index}`} value={mode.value}>
                       {mode.label}
                     </option>
                   ))}
@@ -784,8 +799,8 @@ export default function DriverPage() {
                   onChange={(event) => setActiveMacroId(event.target.value)}
                   value={activeMacro?.id ?? ""}
                 >
-                  {macros.map((macro) => (
-                    <option key={macro.id} value={macro.id}>
+                  {uniqueMacros.map((macro, index) => (
+                    <option key={`active-macro-${macro.id}-${index}`} value={macro.id}>
                       {macro.name}
                     </option>
                   ))}
@@ -814,7 +829,7 @@ export default function DriverPage() {
               {(activeMacro?.steps ?? []).map((step, index) => (
                 <div
                   className="flex items-center justify-between gap-2 rounded-md bg-stone-50 px-3 py-2 text-sm"
-                  key={`${step}-${index}`}
+                  key={`macro-step-${activeMacro?.id ?? "none"}-${index}`}
                 >
                   <span>{step}</span>
                   <button

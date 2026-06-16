@@ -6,7 +6,14 @@ interface CompatibilityNoticeProps {
 }
 
 export function CompatibilityNotice({ issues }: CompatibilityNoticeProps) {
-  if (issues.length === 0) {
+  const uniqueIssues = issues.filter(
+    (issue, index, list) =>
+      list.findIndex(
+        (item) => item.partType === issue.partType && item.reason === issue.reason,
+      ) === index,
+  );
+
+  if (uniqueIssues.length === 0) {
     return (
       <div className="flex items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
         <CheckCircle2 className="h-4 w-4" />
@@ -22,8 +29,8 @@ export function CompatibilityNotice({ issues }: CompatibilityNoticeProps) {
         需要处理的兼容性问题
       </div>
       <ul className="space-y-1">
-        {issues.map((issue) => (
-          <li key={`${issue.partType}-${issue.partName}-${issue.reason}`}>
+        {uniqueIssues.map((issue, index) => (
+          <li key={`compatibility-issue-${issue.partType}-${index}`}>
             {issue.partName}：{issue.reason}
           </li>
         ))}

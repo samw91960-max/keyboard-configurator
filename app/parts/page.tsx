@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageShell } from "@/components/v2/PageShell";
 import { PartCard } from "@/components/v2/PartCard";
 import { partTypeLabels, partTypes } from "@/lib/labels";
@@ -15,6 +15,20 @@ export default function PartsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [message, setMessage] = useState("正在加载部件库...");
   const [loading, setLoading] = useState(false);
+  const uniqueItems = useMemo(() => {
+    const seen = new Set<string>();
+
+    return items.filter((part) => {
+      const key = `${part.type}:${part.id}`;
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
+  }, [items]);
 
   useEffect(() => {
     async function loadParts() {
@@ -67,8 +81,8 @@ export default function PartsPage() {
             value={filter}
           >
             <option value="all">全部部件</option>
-            {partTypes.map((partType) => (
-              <option key={partType} value={partType}>
+            {partTypes.map((partType, index) => (
+              <option key={`parts-type-${partType}-${index}`} value={partType}>
                 {partTypeLabels[partType]}
               </option>
             ))}
@@ -105,8 +119,8 @@ export default function PartsPage() {
       ) : null}
 
       <section className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        {items.map((part) => (
-          <PartCard key={part.id} part={part} />
+        {uniqueItems.map((part, index) => (
+          <PartCard key={`part-${part.type}-${part.id}-${index}`} part={part} />
         ))}
       </section>
     </PageShell>

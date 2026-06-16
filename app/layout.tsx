@@ -28,11 +28,11 @@ export default function RootLayout({
               客制化键盘制作系统 V2
             </Link>
             <nav className="flex flex-wrap gap-2">
-              {navItems.map((item) => (
+              {navItems.map((item, index) => (
                 <Link
                   className="rounded-md border border-stone-200 px-3 py-2 text-sm font-semibold text-stone-700 transition hover:border-ink hover:text-ink"
                   href={item.href}
-                  key={item.href}
+                  key={`nav-${item.href}-${index}`}
                 >
                   {item.label}
                 </Link>

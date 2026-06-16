@@ -8,6 +8,11 @@ interface PartSelectProps {
 }
 
 export function PartSelect({ label, value, parts, onChange }: PartSelectProps) {
+  const uniqueParts = parts.filter(
+    (part, index, list) =>
+      list.findIndex((item) => item.type === part.type && item.id === part.id) === index,
+  );
+
   return (
     <label className="block">
       <span className="mb-1 block text-sm font-semibold text-ink">{label}</span>
@@ -16,8 +21,8 @@ export function PartSelect({ label, value, parts, onChange }: PartSelectProps) {
         onChange={(event) => onChange(event.target.value)}
         value={value}
       >
-        {parts.map((part) => (
-          <option key={part.id} value={part.id}>
+        {uniqueParts.map((part, index) => (
+          <option key={`part-select-${part.type}-${part.id}-${index}`} value={part.id}>
             {part.name}
           </option>
         ))}

@@ -67,9 +67,28 @@ export function isKeyboardLikeDevice(device: WebHIDDevice) {
   return Boolean(productLooksKeyboard || collectionLooksKeyboard);
 }
 
-export function summarizeHIDDevice(device: WebHIDDevice): HIDDeviceSummary {
+export function hidDeviceIdentity(device: WebHIDDevice) {
+  return `${device.vendorId}:${device.productId}`;
+}
+
+export function dedupeHIDDevices(devices: WebHIDDevice[]) {
+  const seen = new Set<string>();
+
+  return devices.filter((device) => {
+    const identity = hidDeviceIdentity(device);
+
+    if (seen.has(identity)) {
+      return false;
+    }
+
+    seen.add(identity);
+    return true;
+  });
+}
+
+export function summarizeHIDDevice(device: WebHIDDevice, index = 0): HIDDeviceSummary {
   return {
-    id: `${device.vendorId}:${device.productId}:${device.productName}`,
+    id: `${device.vendorId}:${device.productId}:${index}`,
     opened: device.opened,
     productId: device.productId,
     productName: device.productName || "Unknown HID Device",
