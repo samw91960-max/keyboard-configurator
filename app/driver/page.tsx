@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Download, FileUp, Plus, Trash2 } from "lucide-react";
+import { WebHIDPanel } from "@/components/driver/WebHIDPanel";
 import { PageShell } from "@/components/v2/PageShell";
 import type {
   KeyboardDriverConfig,
@@ -607,6 +608,12 @@ export default function DriverPage() {
         </div>
 
         <aside className="space-y-5">
+          <WebHIDPanel
+            rgbConfig={rgbConfig}
+            selectedKeyId={selectedKeyId}
+            onRGBConfigChange={setRgbConfig}
+          />
+
           <section className="rounded-md border border-stone-200 bg-white p-4 shadow-sm">
             <h2 className="mb-3 text-base font-semibold text-ink">键位映射</h2>
             <p className="mb-3 text-sm text-stone-500">
